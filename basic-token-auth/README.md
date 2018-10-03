@@ -10,6 +10,7 @@ A working example of basic and token authentication with Django REST Framework. 
 ## Quick Setup
 
 ```
+$ git clone https://github.com/wsvincent/djangocon2018-rest-auth/tree/master/basic-token-auth
 $ pipenv shell
 $ pipenv install
 $ python manage.py runserver
