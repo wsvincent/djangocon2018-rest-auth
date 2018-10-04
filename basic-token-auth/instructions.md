@@ -223,7 +223,7 @@ http://127.0.0.1:8000/rest-auth/logout/
 ```
 
 ```python
-# drfx_project/settings.py
+# example_project/settings.py
 INSTALLED_APPS = [
     # Local
     'users.apps.UsersConfig',
