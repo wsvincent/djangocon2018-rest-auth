@@ -253,7 +253,7 @@ http://127.0.0.1:8000/rest-auth/registration/
 ## JWTs
 
 ```
-(env) $ pipenv install djangorestframework-jwt
+(env) $ pipenv install djangorestframework_simplejwt djangorestframework-jwt
 ```
 
 Require auth for API endpoints and add `JSONWebTokenAuthentication`.
@@ -265,9 +265,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
     ),
 }
 ```
@@ -276,47 +275,53 @@ REST_FRAMEWORK = {
 # jwtauth_project/urls.py
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework_jwt.views import obtain_jwt_token # new
+from rest_framework_simplejwt.views import ( # new
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('rest-auth/', include('rest_auth.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
-    path('api-token-auth/', obtain_jwt_token), # new
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # new
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # new
 ]
 ```
 
 ## Test Endpoint
 
-Assumes username of `admin` and password of `testpass123`. Use your own superuser account info here.
+Assumes username of `testuser` and password of `testpass123`. Use your own superuser account info here or create this account in the Django admin first.
 
 ```
-$ curl -X POST -d "username=admin&password=testpass123" http://localhost:8000/api-token-auth/{"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6IndzdiIsImV4cCI6MTUzODE1MjE2NiwiZW1haWwiOiJ3aWxsQHdzdmluY2VudC5jb20ifQ.vNVOKWzkbq--YMqRv0W5Zyf5JZ_4NP_bYxEgnDPqnJU"}%
+$ curl -X POST -d "username=testuser&password=testpass123"  http://localhost:8000/api/token/
+
+{"refresh":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTUzOTM2ODE5OSwianRpIjoiOTRjYTNkMWQ3YjU5NDY1MWE0OTQyOGQ2MTIzY2VjY2UiLCJ1c2VyX2lkIjoyfQ.AH7WoQPkAV2e6nPIUw4h2BJT1rDWJ5_v9NIGQXI-iBM","access":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTM5MjgyMDk5LCJqdGkiOiI5YzMyMDQyMjBhNGM0NmZkODU4MjJjZTBmOTc1NmFhZSIsInVzZXJfaWQiOjJ9.UC1OmVHV0cALB4Lt9AUkjsffAOrjQiIF7s4kAkhuY0w"}%
 ```
 
 API endpoints require authentication now:
 
 ```
-$ curl -X POST -d "username=admin&password=testpass123" http://localhost:8000/users/
+$ curl -X POST -d "username=testuser&password=testpass123" http://localhost:8000/users/
 ```
 
 Output will be:
 
 ```
-{"detail":"Authentication credentials were not provided."}%
+{"detail":"Authentication credentials were not provided."}
 ```
 
-To access protected API URLs you must include the `Authorization: JWT <your_token>` in the HTTP header.
+To access protected API URLs you must include the "access" token for `Authorization: JWT <your_token>` in the HTTP header.
 
 ```
-$ curl -H "Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6IndzdiIsImV4cCI6MTUzODE1MjE2NiwiZW1haWwiOiJ3aWxsQHdzdmluY2VudC5jb20ifQ.vNVOKWzkbq--YMqRv0W5Zyf5JZ_4NP_bYxEgnDPqnJU" http://localhost:8000/users/
+$ curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTM5MjgyMDk5LCJqdGkiOiI5YzMyMDQyMjBhNGM0NmZkODU4MjJjZTBmOTc1NmFhZSIsInVzZXJfaWQiOjJ9.UC1OmVHV0cALB4Lt9AUkjsffAOrjQiIF7s4kAkhuY0w" http://localhost:8000/users/
 ```
 
-Output will be:
+Output will all your users, in my case:
 
 ```
-[{"id":1,"username":"admin"}]%
+[{"id":1,"username":"wsv"},{"id":2,"username":"testuser"}]
 ```
 
-**Note**: Default is for tokens to expire after 5 minutes. Might get a `Signature has expired` error if wait longer than that. Log in again to generate a refreshed token. Or update `JWT_EXPIRATION_DELTA` under settings as specified [in the docs](http://getblimp.github.io/django-rest-framework-jwt/).
+There are many ways to customize the JWT. See [the official docs](https://github.com/davesque/django-rest-framework-simplejwt).

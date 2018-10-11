@@ -4,11 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-djangorestframework-jwt = "*"
 django = "*"
 djangorestframework = "*"
-django-rest-auth = "*"
 django-allauth = "*"
+djangorestframework-simplejwt = "*"
+django-rest-auth = "*"
 
 [dev-packages]
 
