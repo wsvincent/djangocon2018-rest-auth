@@ -31,8 +31,12 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # Local
-    'users.apps.UsersConfig',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
 
     # 3rd party
     'rest_framework', 
@@ -42,12 +46,8 @@ INSTALLED_APPS = [
     'allauth.account', 
     'rest_auth.registration', 
 
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # Local
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [

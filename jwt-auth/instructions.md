@@ -14,15 +14,15 @@ $ pipenv shell
 ```python
 # jwtauth_project/settings.py
 INSTALLED_APPS = [
-    # Local
-    'users.apps.UsersConfig', # new
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Local
+    'users.apps.UsersConfig', # new
 ]
 
 AUTH_USER_MODEL = 'users.CustomUser' # new
@@ -68,18 +68,18 @@ admin.site.register(CustomUser, CustomUserAdmin)
 ```python
 # jwtauth_project/settings.py
 INSTALLED_APPS = [
-    # Local
-    'users.apps.UsersConfig',
-
-    # 3rd party
-    'rest_framework', # new
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # 3rd party
+    'rest_framework', # new
+
+     # Local
+    'users.apps.UsersConfig',
 ]
 ```
 
@@ -168,19 +168,19 @@ Users detail endpoints: [http://127.0.0.1:8000/users/1/](http://127.0.0.1:8000/u
 ```python
 # jwtauth_project/settings.py
 INSTALLED_APPS = [
-    # Local
-    'users.apps.UsersConfig',
-
-    # 3rd party
-    'rest_framework',
-    'rest_auth', # new
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # 3rd party
+    'rest_framework',
+    'rest_auth', # new
+
+    # Local
+    'users.apps.UsersConfig',
 ]
 ```
 
@@ -213,9 +213,7 @@ http://127.0.0.1:8000/rest-auth/logout/
 ```python
 # socialauth_project/settings.py
 INSTALLED_APPS = [
-    # Local
-    'users.apps.UsersConfig',
-
+    ...
     # 3rd party
     'rest_framework',
     'rest_auth',
@@ -223,6 +221,9 @@ INSTALLED_APPS = [
     'allauth', # new
     'allauth.account', # new
     'rest_auth.registration', # new
+
+    # Local
+    'users.apps.UsersConfig',
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # new

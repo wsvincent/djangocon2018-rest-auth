@@ -30,9 +30,13 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
-    # Local
-    'users.apps.UsersConfig',
+INSTALLED_APPS = [ 
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
 
     # 3rd party 
     'rest_framework',
@@ -43,13 +47,9 @@ INSTALLED_APPS = [
     'rest_auth.registration',
     # For tokens uncomment the line below, update REST_FRAMEWORK setting below, and `migrate` the database
     # 'rest_framework.authtoken'
-    
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+
+     # Local
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
