@@ -1,6 +1,6 @@
 # Finally Understand User Authentication in Django REST Framework
 
-_Talk given at [DjangoConUS 2018]((https://2018.djangocon.us/talk/finally-understand-authentication-in/)_
+_Talk given at [DjangoConUS 2018](https://2018.djangocon.us/talk/finally-understand-authentication-in/)_
 
 [Slides available here](https://tinyurl.com/djangocon2018-rest-auth).
 
